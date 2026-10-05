@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4f46e5"/>
+      <stop offset="100%" stop-color="#3730a3"/>
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="192" height="192" rx="38" fill="url(#bg)"/>
+  <!-- Calendar body -->
+  <rect x="29" y="42" width="134" height="110" rx="12" fill="white" opacity="0.93"/>
+  <!-- Calendar header bar -->
+  <rect x="29" y="42" width="134" height="24" rx="12" fill="#4f46e5"/>
+  <!-- Knob 1 -->
+  <rect x="55" y="35" width="11" height="19" rx="3" fill="white"/>
+  <!-- Knob 2 -->
+  <rect x="119" y="35" width="11" height="19" rx="3" fill="white"/>
+  <!-- Check mark -->
+  <polyline points="58,110 87,130 131,97" fill="none" stroke="#10b981" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

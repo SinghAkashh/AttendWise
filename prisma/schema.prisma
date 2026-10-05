@@ -1,0 +1,80 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String     @id @default(uuid())
+  name          String?
+  email         String     @unique
+  passwordHash  String?    // null for Google-only accounts
+  googleId      String?    @unique // Google sub claim; null for credentials-only accounts
+  targetPercent Float      @default(75)
+  createdAt     DateTime   @default(now())
+  
+  semesters     Semester[]
+}
+
+model Semester {
+  id               String     @id @default(uuid())
+  userId           String
+  startDate        DateTime
+  endDate          DateTime
+  country          String
+  workingSaturdays Boolean    @default(false)
+  
+  user             User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subjects         Subject[]
+  holidays         Holiday[]
+}
+
+model Subject {
+  id         String     @id @default(uuid())
+  semesterId String
+  name       String
+  colorTag   String
+  baselineAttended Int @default(0)
+  baselineHeld     Int @default(0)
+  
+  semester       Semester        @relation(fields: [semesterId], references: [id], onDelete: Cascade)
+  timetableSlots TimetableSlot[]
+  attendanceLogs AttendanceLog[]
+}
+
+model TimetableSlot {
+  id        String @id @default(uuid())
+  subjectId String
+  dayOfWeek Int    // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+  startTime String // "HH:mm"
+  endTime   String // "HH:mm"
+  
+  subject Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+}
+
+model Holiday {
+  id         String   @id @default(uuid())
+  semesterId String
+  date       DateTime
+  name       String
+  source     String   // "auto" | "manual"
+  
+  semester Semester @relation(fields: [semesterId], references: [id], onDelete: Cascade)
+}
+
+model AttendanceLog {
+  id        String   @id @default(uuid())
+  subjectId String
+  date      DateTime
+  status    String   // "present" | "absent" | "holiday" | "cancelled"
+  
+  subject Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  
+  @@unique([subjectId, date])
+}
